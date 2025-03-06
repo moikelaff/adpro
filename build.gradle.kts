@@ -51,6 +51,8 @@ dependencies {
 	testImplementation("org.seleniumhq.selenium:selenium-java:$seleniumJavaVersion")
 	testImplementation("io.github.bonigarcia:selenium-jupiter:$seleniumJupiterVersion")
 	testImplementation("io.github.bonigarcia:webdrivermanager:$webdriverManagerVersion")
+
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
 tasks.register<Test>("unitTest") {
