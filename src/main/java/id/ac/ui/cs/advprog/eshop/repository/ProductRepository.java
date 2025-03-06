@@ -10,8 +10,10 @@ import java.util.Iterator;
 @Repository
 public class ProductRepository {
     private List<Product> productData = new ArrayList<>();
+    private long idCounter = 0;
 
     public Product create(Product product) {
+        product.setProductId(String.valueOf(++idCounter));
         productData.add(product);
         return product;
     }
