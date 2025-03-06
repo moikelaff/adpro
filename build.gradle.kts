@@ -74,11 +74,14 @@ tasks.register<Test>("functionalTest") {
 
 tasks.withType<Test>().configureEach {
 	useJUnitPlatform()
+	jacoco {
+		toolVersion = "0.8.8"
+	}
 }
 
 tasks.test {
 	filter {
-		includeTestsMatching("*FunctionalTest")
+		excludeTestsMatching("*FunctionalTest")
 	}
 	finalizedBy(tasks.jacocoTestReport)
 }

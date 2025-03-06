@@ -30,29 +30,27 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testEditProduct_Success() {
-        // Arrange
-        Product existingProduct = new Product();
-        existingProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        existingProduct.setProductName("Original Product");
-        existingProduct.setProductQuantity(10);
+void testEditProduct_Success() {
+    // Arrange
+    Product existingProduct = new Product();
+    existingProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+    existingProduct.setProductName("Original Product");
+    existingProduct.setProductQuantity(10);
 
-        Product updatedProduct = new Product();
-        updatedProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-        updatedProduct.setProductName("Updated Product");
-        updatedProduct.setProductQuantity(20);
+    Product updatedProduct = new Product();
+    updatedProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+    updatedProduct.setProductName("Updated Product");
+    updatedProduct.setProductQuantity(20);
+    when(productRepository.update(updatedProduct)).thenReturn(updatedProduct);
 
-        when(productRepository.findById("eb558e9f-1c39-460e-8860-71af6af63bd6")).thenReturn(existingProduct);
-        when(productRepository.update(updatedProduct)).thenReturn(updatedProduct);
+    // Act
+    Product result = productService.update(updatedProduct);
 
-        // Act
-        Product result = productService.update(updatedProduct);
-
-        // Assert
-        assertNotNull(result);
-        assertEquals("Updated Product", result.getProductName());
-        assertEquals(20, result.getProductQuantity());
-        verify(productRepository, times(1)).update(updatedProduct);
+    // Assert
+    assertNotNull(result);
+    assertEquals("Updated Product", result.getProductName());
+    assertEquals(20, result.getProductQuantity());
+    verify(productRepository, times(1)).update(updatedProduct);
     }
 
     @Test
@@ -74,37 +72,24 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void testDeleteProduct_Success() {
-        // Arrange
-        String productId = "eb558e9f-1c39-460e-8860-71af6af63bd6";
-        Product existingProduct = new Product();
-        existingProduct.setProductId(productId);
-        existingProduct.setProductName("Product to Delete");
-        existingProduct.setProductQuantity(10);
+void testDeleteProduct_Success() {
+    // Arrange
+    String productId = "eb558e9f-1c39-460e-8860-71af6af63bd6";
+    doNothing().when(productRepository).delete(productId);
 
-        when(productRepository.findById(productId)).thenReturn(existingProduct);
-        doNothing().when(productRepository).delete(productId);
+    // Act
+    productService.delete(productId);
 
-        // Create a test list with the product initially
-        List<Product> productList = new ArrayList<>();
-        productList.add(existingProduct);
-        Iterator<Product> iterator = productList.iterator();
-        
-        // Mock finding all products before and after deletion
-        when(productRepository.findAll()).thenReturn(iterator);
-
-        // Act
-        productService.delete(productId);
-
-        // Verify the delete method was called
-        verify(productRepository, times(1)).delete(productId);
+    // Verify the delete method was called
+    verify(productRepository, times(1)).delete(productId);
     }
+
+    
 
     @Test
     void testDeleteProduct_ProductNotFound() {
         // Arrange
         String nonExistentId = "non-existent-id";
-        when(productRepository.findById(nonExistentId)).thenReturn(null);
 
         // Act - This should not throw an exception
         productService.delete(nonExistentId);
