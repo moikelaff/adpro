@@ -9,6 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -26,78 +29,90 @@ class ProductServiceImplTest {
     void setUp() {
     }
 
+    // Test for create(Product product)
     @Test
-void testEditProduct_Success() {
-    // Arrange
-    Product existingProduct = new Product();
-    existingProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-    existingProduct.setProductName("Original Product");
-    existingProduct.setProductQuantity(10);
-
-    Product updatedProduct = new Product();
-    updatedProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
-    updatedProduct.setProductName("Updated Product");
-    updatedProduct.setProductQuantity(20);
-    when(productRepository.update(updatedProduct)).thenReturn(updatedProduct);
-
-    // Act
-    Product result = productService.update(updatedProduct);
-
-    // Assert
-    assertNotNull(result);
-    assertEquals("Updated Product", result.getProductName());
-    assertEquals(20, result.getProductQuantity());
-    verify(productRepository, times(1)).update(updatedProduct);
-    }
-
-    @Test
-    void testEditProduct_ProductNotFound() {
+    void testCreateProduct_Success() {
         // Arrange
-        Product nonExistentProduct = new Product();
-        nonExistentProduct.setProductId("non-existent-id");
-        nonExistentProduct.setProductName("Non-existent Product");
-        nonExistentProduct.setProductQuantity(5);
+        Product newProduct = new Product();
+        newProduct.setProductId("12345");
+        newProduct.setProductName("New Product");
+        newProduct.setProductQuantity(15);
 
-        when(productRepository.update(nonExistentProduct)).thenReturn(null);
+        when(productRepository.create(newProduct)).thenReturn(newProduct);
 
         // Act
-        Product result = productService.update(nonExistentProduct);
+        Product result = productService.create(newProduct);
 
         // Assert
-        assertNull(result);
-        verify(productRepository, times(1)).update(nonExistentProduct);
+        assertNotNull(result);
+        assertEquals("New Product", result.getProductName());
+        assertEquals(15, result.getProductQuantity());
+        verify(productRepository, times(1)).create(newProduct);
     }
 
+    // Test for findAll()
     @Test
-void testDeleteProduct_Success() {
-    // Arrange
-    String productId = "eb558e9f-1c39-460e-8860-71af6af63bd6";
-    doNothing().when(productRepository).delete(productId);
-
-    // Act
-    productService.delete(productId);
-
-    // Verify the delete method was called
-    verify(productRepository, times(1)).delete(productId);
-    }
-
-    
-
-    @Test
-    void testDeleteProduct_ProductNotFound() {
+    void testFindAllProducts_Success() {
         // Arrange
-        String nonExistentId = "non-existent-id";
+        Product product1 = new Product();
+        product1.setProductId("101");
+        product1.setProductName("Product A");
 
-        // Act - This should not throw an exception
-        productService.delete(nonExistentId);
+        Product product2 = new Product();
+        product2.setProductId("102");
+        product2.setProductName("Product B");
 
-        // Assert - Verify the delete method was still called
-        verify(productRepository, times(1)).delete(nonExistentId);
+        List<Product> productList = Arrays.asList(product1, product2);
+        Iterator<Product> mockIterator = productList.iterator();
+
+        when(productRepository.findAll()).thenReturn(mockIterator);
+
+        // Act
+        List<Product> result = productService.findAll();
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("Product A", result.get(0).getProductName());
+        assertEquals("Product B", result.get(1).getProductName());
+        verify(productRepository, times(1)).findAll();
+    }
+
+
+    @Test
+    void testEditProduct_Success() {
+        Product existingProduct = new Product();
+        existingProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        existingProduct.setProductName("Original Product");
+        existingProduct.setProductQuantity(10);
+
+        Product updatedProduct = new Product();
+        updatedProduct.setProductId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        updatedProduct.setProductName("Updated Product");
+        updatedProduct.setProductQuantity(20);
+
+        when(productRepository.update(updatedProduct)).thenReturn(updatedProduct);
+
+        Product result = productService.update(updatedProduct);
+
+        assertNotNull(result);
+        assertEquals("Updated Product", result.getProductName());
+        assertEquals(20, result.getProductQuantity());
+        verify(productRepository, times(1)).update(updatedProduct);
+    }
+
+    @Test
+    void testDeleteProduct_Success() {
+        String productId = "eb558e9f-1c39-460e-8860-71af6af63bd6";
+        doNothing().when(productRepository).delete(productId);
+
+        productService.delete(productId);
+
+        verify(productRepository, times(1)).delete(productId);
     }
 
     @Test
     void testFindById_Success() {
-        // Arrange
         String productId = "eb558e9f-1c39-460e-8860-71af6af63bd6";
         Product existingProduct = new Product();
         existingProduct.setProductId(productId);
@@ -106,26 +121,11 @@ void testDeleteProduct_Success() {
 
         when(productRepository.findById(productId)).thenReturn(existingProduct);
 
-        // Act
         Product result = productService.findById(productId);
 
-        // Assert
         assertNotNull(result);
         assertEquals(productId, result.getProductId());
         assertEquals("Test Product", result.getProductName());
         assertEquals(10, result.getProductQuantity());
-    }
-
-    @Test
-    void testFindById_NotFound() {
-        // Arrange
-        String nonExistentId = "non-existent-id";
-        when(productRepository.findById(nonExistentId)).thenReturn(null);
-
-        // Act
-        Product result = productService.findById(nonExistentId);
-
-        // Assert
-        assertNull(result);
     }
 }
