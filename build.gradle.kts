@@ -75,7 +75,7 @@ tasks.register<Test>("functionalTest") {
 tasks.withType<Test>().configureEach {
 	useJUnitPlatform()
 	jacoco {
-		toolVersion = "0.8.8"
+		toolVersion = "0.8.11"
 	}
 }
 
