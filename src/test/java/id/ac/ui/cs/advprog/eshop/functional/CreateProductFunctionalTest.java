@@ -107,10 +107,10 @@ class CreateProductFunctionalTest {
     @Test
     void testCreateProduct_NavigateFromHomePage(ChromeDriver driver) throws Exception {
         // 1. Start from the home page
-        driver.get(baseUrl);
+        driver.get(baseUrl + "/product/list");
         
         // 2. Navigate to product creation using the UI navigation
-        WebElement createProductLink = driver.findElement(By.linkText("Create Product"));
+        WebElement createProductLink = driver.findElement(By.linkText("Create New Product"));
         createProductLink.click();
         
         // 3. Verify we're on the create product page

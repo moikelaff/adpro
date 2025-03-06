@@ -24,9 +24,16 @@ public class ProductController {
 
     @PostMapping("/create")
     public String createProductPost(@ModelAttribute Product product, Model model) {
+        // Validate product has a name
+        if (product.getProductName() == null || product.getProductName().trim().isEmpty()) {
+            model.addAttribute("error", "Product name cannot be empty");
+            return "createProduct";
+        }
+        
         service.create(product);
         return "redirect:/product/list";
     }
+
 
     @GetMapping("/list")
     public String productListPage(Model model) {
@@ -48,21 +55,19 @@ public class ProductController {
         return "redirect:/product/list";
     }
 
+    // Show the delete confirmation page
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable String id) {
-        service.delete(id);
-        return "redirect:/product/list";
-    }
-        @GetMapping("/delete/{id}")
     public String deleteProductPage(@PathVariable String id, Model model) {
         Product product = service.findById(id);
         model.addAttribute("product", product);
         return "deleteProduct"; 
-}
+    }
 
     @PostMapping("/delete")
     public String deleteProductPost(@ModelAttribute Product product) {
         service.delete(product.getProductId());
         return "redirect:/product/list";
-}
+    }
+
+
 }

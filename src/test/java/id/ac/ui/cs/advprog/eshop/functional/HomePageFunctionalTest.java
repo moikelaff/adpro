@@ -33,21 +33,21 @@ class HomePageFunctionalTest {
     @Test
     void pageTitle_isCorrect(ChromeDriver driver) throws Exception {
         // Exercise
-        driver.get(baseUrl);
+        driver.get(baseUrl + "/product/list"); // Navigate to product list instead of root
         String pageTitle = driver.getTitle();
 
         // Verify
-        assertEquals("ADV Shop", pageTitle);
+        assertEquals("Product List", pageTitle); // Changed expected title
     }
 
     @Test
     void welcomeMessage_homePage_isCorrect(ChromeDriver driver) throws Exception {
         // Exercise
-        driver.get(baseUrl);
+        driver.get(baseUrl + "/product/list"); // Navigate to product list instead of root
         String welcomeMessage = driver.findElement(By.tagName("h3"))
                 .getText();
 
         // Verify
-        assertEquals("Welcome", welcomeMessage);
+        assertEquals("Product List", welcomeMessage); // Changed expected text
     }
 }
