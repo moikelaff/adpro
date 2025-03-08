@@ -40,13 +40,7 @@ public class CarServiceImpl implements CarService {
     
     @Override
     public void deleteCarById(String carId) {
-        Iterator<Car> carIterator = carRepository.findAll();
-        while(carIterator.hasNext()) {
-            Car car = carIterator.next();
-            if(car.getCarId().equals(carId)) {
-                carIterator.remove();
-            }
-        }
+        carRepository.delete(carId);
     }
     
 }
