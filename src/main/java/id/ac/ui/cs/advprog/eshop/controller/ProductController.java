@@ -2,6 +2,7 @@ package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
+import id.ac.ui.cs.advprog.eshop.service.ProductValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,9 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductService service;
+    
+    @Autowired
+    private ProductValidationService validationService;
 
     @GetMapping("/create")
     public String createProductPage(Model model) {
@@ -24,16 +28,15 @@ public class ProductController {
 
     @PostMapping("/create")
     public String createProductPost(@ModelAttribute Product product, Model model) {
-        // Validate product has a name
-        if (product.getProductName() == null || product.getProductName().trim().isEmpty()) {
-            model.addAttribute("error", "Product name cannot be empty");
+        String validationError = validationService.getValidationMessage(product);
+        if (validationError != null) {
+            model.addAttribute("error", validationError);
             return "createProduct";
         }
         
         service.create(product);
         return "redirect:/product/list";
     }
-
 
     @GetMapping("/list")
     public String productListPage(Model model) {
@@ -51,11 +54,16 @@ public class ProductController {
     
     @PostMapping("/edit")
     public String editProductPost(@ModelAttribute Product product, Model model) {
+        String validationError = validationService.getValidationMessage(product);
+        if (validationError != null) {
+            model.addAttribute("error", validationError);
+            return "editProduct";
+        }
+        
         service.update(product);
         return "redirect:/product/list";
     }
 
-    // Show the delete confirmation page
     @GetMapping("/delete/{id}")
     public String deleteProductPage(@PathVariable String id, Model model) {
         Product product = service.findById(id);
@@ -68,5 +76,4 @@ public class ProductController {
         service.delete(product.getProductId());
         return "redirect:/product/list";
     }
-
 }
