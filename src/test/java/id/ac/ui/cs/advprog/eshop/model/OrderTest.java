@@ -10,6 +10,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+
 class OrderTest {
     private List<Product> products;
 
@@ -84,11 +85,12 @@ class OrderTest {
                 this.products,
                 1708560000L,
                 "Safira Sudrajat",
-                "MEOW"
+                "INVALID_STATUS"
             );
         });
     }
 
+    @Test
     void testSetStatusToCancelled () {
         Order order = new Order(
             "13652556-012a-4c07-b546-54eb1396d79b",
