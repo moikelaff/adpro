@@ -9,10 +9,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.model.Order;
 import id.ac.ui.cs.advprog.eshop.repository.OrderRepository;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import id.ac.ui.cs.advprog.eshop.enums.OrderStatus;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import java.util.NoSuchElementException;
+import static org.mockito.Mockito.*;
 import java.util.ArrayList;
 import java.util.List;
 
