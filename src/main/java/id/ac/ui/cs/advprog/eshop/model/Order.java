@@ -12,6 +12,7 @@ public class Order {
     String id;
     List<Product> products;
     Long orderTime;
+    String author;
     @Setter
     String status;
 
