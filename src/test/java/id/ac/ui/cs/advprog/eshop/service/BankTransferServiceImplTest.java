@@ -36,17 +36,15 @@ public class BankTransferServiceImplTest {
     @BeforeEach
     void setUp() {
         // Create a sample product
-        Product product = Product.builder()
-                .id("eb558e9f-1c39-460e-8860-71af6af63bd6")
-                .name("Sampo Cap Bambang")
-                .quantity(2)
-                .price("12000")
-                .build();
+        Product product = new Product();
+        product.setId("eb558e9f-1c39-460e-8860-71af6af63bd6");
+        product.setName("Sampo Cap Bambang");
+        product.setQuantity(2);
 
         List<Product> products = new ArrayList<>();
         products.add(product);
 
-        // Create a sample order
+        // Create a sample order using Order.builder() as you're still using that
         order = Order.builder()
                 .id("order-123")
                 .products(products)

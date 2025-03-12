@@ -1,7 +1,10 @@
-package id.ac.ui.cs.advprog.eshop;
+package id.ac.ui.cs.advprog.eshop.service;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import id.ac.ui.cs.advprog.eshop.EshopApplication;
+
 import static org.mockito.Mockito.*;
 
 import org.springframework.boot.SpringApplication;
