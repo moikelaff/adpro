@@ -2,6 +2,8 @@ package id.ac.ui.cs.advprog.eshop.controller;
 
 import id.ac.ui.cs.advprog.eshop.model.Product;
 import id.ac.ui.cs.advprog.eshop.service.ProductService;
+import id.ac.ui.cs.advprog.eshop.service.ProductValidationService;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +26,9 @@ class ProductControllerTest {
 
     @Mock
     private ProductService productService;
+    
+    @Mock
+    private ProductValidationService productValidationService;
 
     @InjectMocks
     private ProductController productController;
@@ -50,6 +55,7 @@ class ProductControllerTest {
     @Test
     void testCreateProductPost_Valid() {
         when(productService.create(any(Product.class))).thenReturn(product);
+        when(productValidationService.getValidationMessage(any(Product.class))).thenReturn(null); // Valid product
 
         String viewName = productController.createProductPost(product, model);
         assertEquals("redirect:/product/list", viewName);
@@ -59,10 +65,12 @@ class ProductControllerTest {
     @Test
     void testCreateProductPost_Invalid() {
         product.setProductName("");
+        when(productValidationService.getValidationMessage(any(Product.class))).thenReturn("Product name cannot be empty");
 
         String viewName = productController.createProductPost(product, model);
         assertEquals("createProduct", viewName);
         verify(model).addAttribute(eq("error"), eq("Product name cannot be empty"));
+        verify(productService, never()).create(any(Product.class));
     }
 
     @Test
@@ -88,6 +96,7 @@ class ProductControllerTest {
     @Test
     void testEditProductPost() {
         when(productService.update(any(Product.class))).thenReturn(product);
+        when(productValidationService.getValidationMessage(any(Product.class))).thenReturn(null); // Valid product
 
         String viewName = productController.editProductPost(product, model);
         assertEquals("redirect:/product/list", viewName);
@@ -104,12 +113,11 @@ class ProductControllerTest {
     }
 
     @Test
-void testDeleteProductPost() {
-   
-    doNothing().when(productService).delete(anyString());
+    void testDeleteProductPost() {
+        doNothing().when(productService).delete(anyString());
 
-    String viewName = productController.deleteProductPost(product);
-    assertEquals("redirect:/product/list", viewName);
-    verify(productService).delete(product.getProductId());
-}
+        String viewName = productController.deleteProductPost(product);
+        assertEquals("redirect:/product/list", viewName);
+        verify(productService).delete(product.getProductId());
+    }
 }
